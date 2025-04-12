@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root to: proc { [200, {}, ['Renace API is up 🧠💫']] }
+
   devise_for :users,
              defaults: { format: :json },
              path: '',
