@@ -6,7 +6,7 @@ gem 'aws-sdk-s3', require: false
 gem 'devise'
 gem 'bootsnap', require: false
 gem 'devise-jwt'
-gem 'dotenv-rails' # Variables de entorno locales
+gem 'dotenv-rails', require: 'dotenv/rails' # Variables de entorno locales
 gem 'elasticsearch', '~> 7.17'
 gem 'elasticsearch-model', '~> 7.1'
 gem 'elasticsearch-rails', '~> 7.1'
