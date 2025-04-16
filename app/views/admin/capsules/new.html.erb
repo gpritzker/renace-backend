@@ -1,0 +1,40 @@
+### app/views/admin/capsules/new.html.erb
+<h1>New Capsule</h1>
+
+<%= render 'form', capsule: @capsule %>
+
+<%= link_to 'Back', admin_capsules_path %>
+
+### app/views/admin/capsules/_form.html.erb
+<%= form_with(model: [:admin, capsule]) do |form| %>
+  <% if capsule.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(capsule.errors.count, "error") %> prohibited this capsule from being saved:</h2>
+
+      <ul>
+        <% capsule.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :approved %>
+    <%= form.check_box :approved %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

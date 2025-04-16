@@ -7,6 +7,8 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   config.active_storage.service = :local
+  
+  config.assets.debug = true
 
   config.active_job.queue_adapter = :sidekiq
 

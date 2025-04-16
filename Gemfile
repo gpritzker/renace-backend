@@ -12,7 +12,6 @@ gem 'elasticsearch-model', '~> 7.1'
 gem 'elasticsearch-rails', '~> 7.1'
 gem 'json', '>= 2.0'
 gem 'mini_magick'
-gem 'paper_trail', '~> 12.0'
 gem 'pg', '>= 1.1'
 gem "puma"
 gem 'rack-cors'
@@ -20,6 +19,11 @@ gem "rails", "~> 7.1.3"
 gem 'spring', '>= 3.1.0' # Asegura una versión compatible de Spring
 gem 'sidekiq'
 gem 'rack-session'  # Necesario para manejar sesiones en API-only
+gem "tailwindcss-rails"
+gem 'sprockets-rails'
+gem 'rails-ujs'
+gem 'jquery-rails'
+gem 'bootstrap', '~> 5.1.3'
 
 group :development, :test do
   gem 'byebug'
@@ -27,3 +31,8 @@ group :development, :test do
   gem 'web-console', '~> 4.0'
   gem 'wkhtmltopdf-binary'
 end
+gem "jsbundling-rails", "~> 1.3"
+
+gem "importmap-rails", "~> 2.1"
+
+gem "paper_trail", "~> 12.1"

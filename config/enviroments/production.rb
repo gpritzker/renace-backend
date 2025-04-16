@@ -1,6 +1,9 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+
+  config.assets.compile = false
+  config.assets.precompile += %w( application.js application.css )
   config.cache_classes = true
   config.eager_load = true
 
@@ -14,6 +17,6 @@ Rails.application.configure do
 
   config.log_level = :info
   config.logger = Logger.new($stdout)
-
+  config.assets.debug = true
   config.force_ssl = true
 end

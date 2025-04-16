@@ -1,0 +1,33 @@
+<h1 class="display-4 mb-5">Panel de Administración</h1>
+
+<div class="row">
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">👥 Usuarios</h5>
+        <p class="card-text">Administrar todos los usuarios registrados.</p>
+        <%= link_to 'Ver usuarios', admin_users_path, class: 'btn btn-primary btn-sm' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">📦 Cápsulas</h5>
+        <p class="card-text">Ver y aprobar cápsulas enviadas por los usuarios.</p>
+        <%= link_to 'Ver cápsulas', admin_capsules_path, class: 'btn btn-primary btn-sm' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">🧠 Memorias</h5>
+        <p class="card-text">Gestionar los recuerdos dentro de las cápsulas.</p>
+        <%= link_to 'Ver memorias', admin_memories_path, class: 'btn btn-primary btn-sm' %>
+      </div>
+    </div>
+  </div>
+</div>

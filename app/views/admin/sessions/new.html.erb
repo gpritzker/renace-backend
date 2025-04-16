@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login Admin - Renace</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f3f4f6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .login-container {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .login-container h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #111827;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: #374151;
+      }
+
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #111827;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
+
+      .btn:hover {
+        background-color: #1f2937;
+      }
+
+      .flash-alert {
+        background-color: #fee2e2;
+        color: #b91c1c;
+        padding: 0.75rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="login-container">
+      <h1>Login Admin</h1>
+
+      <% if flash[:alert] %>
+        <div class="flash-alert"><%= flash[:alert] %></div>
+      <% end %>
+
+      <%= form_with url: admin_session_path, method: :post, local: true do %>
+        <div class="form-group">
+          <%= label_tag :email, 'Email' %>
+          <%= email_field_tag :email, nil, required: true, autofocus: true %>
+        </div>
+
+        <div class="form-group">
+          <%= label_tag :password, 'Password' %>
+          <%= password_field_tag :password, nil, required: true %>
+        </div>
+
+        <%= submit_tag 'Iniciar sesión', class: 'btn' %>
+      <% end %>
+    </div>
+  </body>
+</html>

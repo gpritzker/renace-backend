@@ -1,0 +1,18 @@
+{
+  "name": "app",
+  "private": true,
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.25.2",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4"
+  },
+  "dependencies": {
+    "@hotwired/turbo-rails": "^8.0.13",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.5"
+  }
+}

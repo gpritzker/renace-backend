@@ -1,0 +1,7 @@
+<p>
+  <strong>Atributo:</strong>
+  <%= @resource.content %>
+</p>
+
+<%= link_to 'Edit', [:edit, :admin, @resource] %> |
+<%= link_to 'Back', [:admin, controller_name.to_sym] %>

@@ -1,0 +1,20 @@
+### app/views/admin/capsules/show.html.erb
+<h1><%= @capsule.title %></h1>
+<p><%= @capsule.description %></p>
+<p><strong>Approved:</strong> <%= @capsule.approved ? 'Yes' : 'No' %></p>
+<p><strong>User:</strong> <%= @capsule.user.email %></p>
+
+<%= link_to 'Edit', edit_admin_capsule_path(@capsule) %> |
+<%= link_to 'Back', admin_capsules_path %> |
+<% if @capsule.approved? %>
+  <%= button_to 'Disapprove', disapprove_admin_capsule_path(@capsule), method: :patch %>
+<% else %>
+  <%= button_to 'Approve', approve_admin_capsule_path(@capsule), method: :patch %>
+<% end %>
+
+### app/views/admin/capsules/edit.html.erb
+<h1>Edit Capsule</h1>
+
+<%= render 'form', capsule: @capsule %>
+
+<%= link_to 'Back', admin_capsules_path %>
