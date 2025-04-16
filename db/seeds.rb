@@ -18,6 +18,7 @@ puts "✅ Admin creado o actualizado: #{admin.email} (contraseña: admin1234)"
     password: "password123",
     password_confirmation: "password123",
     confirmed_at: Time.current
+    # ❌ NADA de user.name = ...
   )
   user.save!
   puts "👤 Usuario creado o actualizado: #{email} (password123)"
