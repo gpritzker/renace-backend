@@ -11,9 +11,9 @@ Rails.application.routes.draw do
                registration: 'signup'
              },
              controllers: {
-               sessions: 'api/v1/users/sessions',
-               registrations: 'api/v1/users/registrations',
-               confirmations: 'api/v1/users/confirmations'
+               sessions: 'api/v1/sessions',
+               registrations: 'api/v1/registrations',
+               confirmations: 'api/v1/confirmations'
              }
 
   # =========================
