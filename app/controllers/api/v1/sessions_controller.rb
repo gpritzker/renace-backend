@@ -9,9 +9,12 @@ module Api
       private
 
       def respond_with(resource, _opts = {})
+        token = request.env['warden-jwt_auth.token']
+
         render json: {
           status: { code: 200, message: 'Logged in successfully.' },
-          data: resource
+          data: UserSerializer.new(resource).as_json,
+          token: token
         }, status: :ok
       end
 

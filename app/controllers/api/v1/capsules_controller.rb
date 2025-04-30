@@ -2,16 +2,21 @@
 
 module Api
   module V1
-    class CapsulesController < ApplicationController
+    class CapsulesController < ActionController::API
       before_action :authenticate_user!
+      respond_to :json
 
       def index
         render json: current_user.capsules
       end
 
       def show
-        capsule = current_user.capsules.find(params[:id])
-        render json: capsule
+        capsule = current_user.capsules.find_by(id: params[:id])
+        if capsule
+          render json: capsule
+        else
+          render json: { error: "Capsule not found" }, status: :not_found
+        end
       end
 
       def create

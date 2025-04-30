@@ -24,6 +24,7 @@ gem 'sprockets-rails'
 gem 'rails-ujs'
 gem 'jquery-rails'
 gem 'bootstrap', '~> 5.1.3'
+gem 'active_model_serializers', '~> 0.10.0'
 
 group :development, :test do
   gem 'byebug'
