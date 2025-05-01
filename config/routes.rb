@@ -46,8 +46,8 @@ Rails.application.routes.draw do
   # =========================
   namespace :api do
     namespace :v1 do
-      resources :capsules, only: [:index, :show, :create]
-      resources :memories, only: [:index, :show, :create]
+      resources :capsules, only: [:index, :show, :create, :update]
+      resources :memories, only: [:index, :create, :update]  
     end
   end
 

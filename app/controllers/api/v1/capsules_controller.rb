@@ -28,6 +28,15 @@ module Api
         end
       end
 
+      def update
+        capsule = current_user.capsules.find(params[:id])
+        if capsule.update(capsule_params)
+          render json: capsule
+        else
+          render json: { errors: capsule.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
       private
 
       def capsule_params

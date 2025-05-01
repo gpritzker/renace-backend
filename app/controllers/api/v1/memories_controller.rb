@@ -17,6 +17,15 @@ module Api
         end
       end
 
+      def update
+        memory = Memory.find(params[:id])
+        if memory.capsule.user_id == current_user.id && memory.update(memory_params)
+          render json: memory
+        else
+          render json: { errors: memory.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
       private
 
       def memory_params
