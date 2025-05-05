@@ -11,7 +11,11 @@ class MemorySerializer < ApplicationSerializer
 
   def file_url
     return nil unless object.file.attached?
-
-    Rails.application.routes.url_helpers.rails_blob_url(object.file, host: default_host)
+  
+    Rails.application.routes.url_helpers.rails_blob_url(
+      object.file,
+      host: default_host, # o el string si no usás helper
+      disposition: 'inline'
+    )
   end
 end
