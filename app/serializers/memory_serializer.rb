@@ -28,7 +28,12 @@ class MemorySerializer < ActiveModel::Serializer
   def s3_url
     return nil unless object.file.attached?
   
-    object.file.blob.url(disposition: 'inline', filename: object.file.filename)
+    object.file.blob.service.url(
+      object.file.key,
+      disposition: "inline",
+      filename: object.file.filename,
+      expires_in: 10.minutes
+    )
   end
 
   private
