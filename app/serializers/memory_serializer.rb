@@ -9,12 +9,29 @@ class MemorySerializer < ApplicationSerializer
 
   belongs_to :capsule
 
-  def file_url
+  def rails_url
     return nil unless object.file.attached?
-  
-    object.file.service_url(
+
+    Rails.application.routes.url_helpers.rails_blob_url(
+      object.file,
+      host: default_host, # definilo si no tenés ApplicationSerializer
+      disposition: 'inline'
+    )
+  end
+
+  def s3_url
+    return nil unless object.file.attached?
+
+    object.file.blob.service_url(
       expires_in: 10.minutes,
       disposition: 'inline'
     )
-  end  
+  end
+
+  private
+
+  def default_host
+    ENV['APP_HOST'] || 'http://localhost:3000'
+  end
+  
 end
