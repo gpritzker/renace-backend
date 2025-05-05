@@ -22,9 +22,8 @@ class MemorySerializer < ActiveModel::Serializer
 
   def s3_url
     return nil unless object.file.attached?
-  
-    object.file.blob.service.send(:url_for_direct_upload, object.file.key, expires_in: 10.minutes, content_type: object.file.blob.content_type)
-  end
+    object.file.blob.url # Genera la URL segura firmada con expiración
+  end  
 
   private
 
