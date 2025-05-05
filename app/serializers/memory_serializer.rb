@@ -20,10 +20,16 @@ class MemorySerializer < ActiveModel::Serializer
     )
   end
 
+  # def s3_url
+  #   return nil unless object.file.attached?
+  #   object.file.blob.url # Genera la URL segura firmada con expiración
+  # end
+
   def s3_url
     return nil unless object.file.attached?
-    object.file.blob.url # Genera la URL segura firmada con expiración
-  end  
+  
+    object.file.blob.url(disposition: 'inline', filename: object.file.filename)
+  end
 
   private
 
