@@ -6,8 +6,10 @@ Rails.application.configure do
 
   config.consider_all_requests_local = true
 
-  config.active_storage.service = :local
-  
+  config.active_storage.service = :amazon
+  config.action_controller.default_url_options = { host: 'http://localhost:3000' }
+  Rails.application.routes.default_url_options[:host] = 'http://localhost:3000'
+
   config.assets.debug = true
 
   config.active_job.queue_adapter = :sidekiq

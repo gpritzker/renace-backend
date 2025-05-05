@@ -6,7 +6,7 @@ Rails.application.configure do
 
   config.consider_all_requests_local = true
 
-  config.active_storage.service = :test
+  config.active_storage.service = :amazon
 
   config.active_job.queue_adapter = :inline
 

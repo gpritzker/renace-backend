@@ -29,7 +29,7 @@ module Api
       private
 
       def memory_params
-        params.require(:memory).permit(:capsule_id, :content, :media_url, :memory_type)
+        params.require(:memory).permit(:capsule_id, :content, :media_url, :memory_type, :file)
       end
     end
   end

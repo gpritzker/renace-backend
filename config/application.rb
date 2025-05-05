@@ -4,6 +4,7 @@ require "logger"
 require "active_support/logger"
 require "sprockets/railtie"
 require 'dotenv-rails'
+require "active_storage/engine"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -24,7 +25,7 @@ module Renace
     config.middleware.use ActionDispatch::Flash
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
-
+    config.active_storage.service = :amazon
     # Use Sidekiq for background jobs
     config.active_job.queue_adapter = :sidekiq
 

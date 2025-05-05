@@ -1,6 +1,8 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  
+  Rails.application.routes.default_url_options[:host] = 'https://api.renace.com.ar'
 
   config.assets.compile = false
   config.assets.precompile += %w( application.js application.css )
