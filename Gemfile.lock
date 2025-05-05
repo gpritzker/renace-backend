@@ -378,6 +378,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   active_storage_validations
+  activestorage
   aws-sdk-rails
   aws-sdk-s3
   bootsnap
