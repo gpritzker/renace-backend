@@ -10,7 +10,10 @@ module Api
 
       def create
         memory = Memory.new(memory_params)
-        if memory.save
+        if memory.save! && memory.capsule.user_id == current_user.id
+          # If the memory is saved successfully, we can send a notification
+          # to the user about the new memory.
+          # NotificationWorker.perform_async(memory.id)
           render json: memory, status: :created
         else
           render json: { errors: memory.errors.full_messages }, status: :unprocessable_entity
