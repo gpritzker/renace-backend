@@ -1,11 +1,12 @@
-class MemorySerializer < ApplicationSerializer
+class MemorySerializer < ActiveModel::Serializer
   attributes :id,
              :capsule_id,
              :content,
              :memory_type,
              :created_at,
              :updated_at,
-             :file_url
+             :rails_url,
+             :s3_url
 
   belongs_to :capsule
 
@@ -33,5 +34,4 @@ class MemorySerializer < ApplicationSerializer
   def default_host
     ENV['APP_HOST'] || 'http://localhost:3000'
   end
-  
 end
