@@ -30,9 +30,10 @@ class MemorySerializer < ActiveModel::Serializer
   
     object.file.blob.service.url(
       object.file.key,
+      expires_in: 10.minutes,
       disposition: "inline",
       filename: object.file.filename,
-      expires_in: 10.minutes
+      content_type: object.file.blob.content_type
     )
   end
 
