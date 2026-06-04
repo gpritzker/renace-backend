@@ -10,5 +10,6 @@ class User < ApplicationRecord
      
        # Relaciones
        has_many :capsules, dependent: :destroy
+       has_many :voice_samples, dependent: :destroy
 end
      

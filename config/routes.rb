@@ -15,7 +15,8 @@ Rails.application.routes.draw do
              controllers: {
                sessions: 'api/v1/sessions',
                registrations: 'api/v1/registrations',
-               confirmations: 'api/v1/confirmations'
+               confirmations: 'api/v1/confirmations',
+               passwords: 'api/v1/passwords'
              }
 
   # =========================
@@ -48,8 +49,23 @@ Rails.application.routes.draw do
   # =========================
   namespace :api do
     namespace :v1 do
-      resources :capsules, only: [:index, :show, :create, :update]
-      resources :memories, only: [:index, :create, :update]  
+      resources :capsules, only: [:index, :show, :create, :update, :destroy]
+      resources :memories, only: [:index, :show, :create, :update, :destroy]
+
+      # Endpoints públicos (sin auth)
+      get  'public/capsules/:id',                  to: 'public_capsules#show'
+      post 'public/capsules/:id/narrate',          to: 'public_capsules#narrate'
+      post 'public/capsules/:id/narrate_story',    to: 'public_capsules#narrate_story'
+
+      # Bot conversacional (público)
+      post 'capsules/:capsule_id/chat', to: 'conversations#chat'
+
+      # Perfil de voz e IA
+      get    'voice_profile',         to: 'voice_profiles#show'
+      post   'voice_samples',         to: 'voice_profiles#create_sample'
+      delete 'voice_samples/:id',     to: 'voice_profiles#destroy_sample', as: :voice_sample
+      post   'voice_profile/clone',   to: 'voice_profiles#clone'
+      post   'voice_profile/preview', to: 'voice_profiles#preview'
     end
   end
 

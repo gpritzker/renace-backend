@@ -37,6 +37,16 @@ module Api
         end
       end
 
+      def destroy
+        capsule = current_user.capsules.find_by(id: params[:id])
+        if capsule
+          capsule.destroy
+          render json: { message: "Capsule deleted" }
+        else
+          render json: { error: "Capsule not found" }, status: :not_found
+        end
+      end
+
       private
 
       def capsule_params

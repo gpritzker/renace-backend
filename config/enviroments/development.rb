@@ -23,15 +23,6 @@ Rails.application.configure do
   config.logger = Logger.new($stdout)
   config.log_level = :debug
 
-  config.action_mailer.delivery_method = :smtp
-
-  config.action_mailer.smtp_settings = {
-    address:              "smtp.gmail.com", # o el que uses
-    port:                 587,
-    domain:               "renacer.com.ar",
-    user_name:            ENV['MAIL_USERNAME'],
-    password:             ENV['MAIL_PASSWORD'],
-    authentication:       :plain,
-    enable_starttls_auto: true
-  }
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
 end

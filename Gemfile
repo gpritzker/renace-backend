@@ -40,3 +40,5 @@ gem "jsbundling-rails", "~> 1.3"
 gem "importmap-rails", "~> 2.1"
 
 gem "paper_trail", "~> 12.1"
+gem 'ruby-openai', '~> 7.0'
+gem 'httparty'

@@ -1,0 +1,29 @@
+<%= form_with(model: [:admin, capsule], local: true) do |form| %>
+  <% if capsule.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(capsule.errors.count, "error") %> impidieron guardar la cápsula:</h2>
+      <ul>
+        <% capsule.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title, 'Título' %>
+    <%= form.text_field :title, placeholder: 'Ingrese el título de la cápsula' %>
+  </div>
+  <div class="field">
+    <%= form.label :description, 'Descripción' %>
+    <%= form.text_area :description, placeholder: 'Ingrese la descripción' %>
+  </div>
+  <div class="field">
+    <%= form.label :approved, 'Aprobada' %>
+    <%= form.check_box :approved %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Guardar cambios' %>
+  </div>
+<% end %>

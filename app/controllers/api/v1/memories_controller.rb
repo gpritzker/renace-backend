@@ -29,6 +29,25 @@ module Api
         end
       end
 
+      def show
+        memory = Memory.find_by(id: params[:id])
+        if memory && memory.capsule.user_id == current_user.id
+          render json: memory
+        else
+          render json: { error: "Memory not found" }, status: :not_found
+        end
+      end
+
+      def destroy
+        memory = Memory.find_by(id: params[:id])
+        if memory && memory.capsule.user_id == current_user.id
+          memory.destroy
+          render json: { message: "Memory deleted" }
+        else
+          render json: { error: "Memory not found or not authorized" }, status: :not_found
+        end
+      end
+
       private
 
       def memory_params
