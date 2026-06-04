@@ -1,6 +1,19 @@
-<h1>Editing</h1>
+<div class="d-flex align-items-center gap-2 mb-4">
+  <%= link_to admin_user_path(@user), class: 'btn btn-sm btn-outline-secondary' do %>
+    &larr; Volver
+  <% end %>
+  <h1 class="h4 mb-0">Editar usuario</h1>
+  <span class="badge <%= @user.admin? ? 'bg-danger' : 'bg-secondary' %>">
+    <%= @user.admin? ? 'Admin' : 'Usuario' %>
+  </span>
+</div>
 
-<%= render 'form', resource: @resource %>
-
-<%= link_to 'Show', [:admin, @resource] %> |
-<%= link_to 'Back', [:admin, controller_name.to_sym] %>
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <%= render 'form' %>
+      </div>
+    </div>
+  </div>
+</div>

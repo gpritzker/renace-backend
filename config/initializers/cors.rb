@@ -1,6 +1,12 @@
+ALLOWED_ORIGINS = [
+  'http://localhost:3001',
+  'https://renace.com.ar',
+  ENV['FRONTEND_URL']
+].compact.uniq.freeze
+
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins ENV.fetch('FRONTEND_URL', 'http://localhost:3001')
+    origins(*ALLOWED_ORIGINS)
     resource '*',
              headers: :any,
              methods: [:get, :post, :patch, :put, :delete, :options, :head],

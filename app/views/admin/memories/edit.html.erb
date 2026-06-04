@@ -1,6 +1,16 @@
-<h1>Editing</h1>
+<div class="d-flex align-items-center gap-2 mb-4">
+  <%= link_to admin_memories_path, class: 'btn btn-sm btn-outline-secondary' do %>
+    &larr; Recuerdos
+  <% end %>
+  <h1 class="h4 mb-0">Editar recuerdo</h1>
+</div>
 
-<%= render 'form', memory: @memory %>
-
-<%= link_to 'Show', [:admin, @memory] %> |
-<%= link_to 'Back', [:admin, :memories] %>
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <%= render 'form', memory: @memory %>
+      </div>
+    </div>
+  </div>
+</div>

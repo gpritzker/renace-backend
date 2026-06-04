@@ -34,7 +34,9 @@ Rails.application.routes.draw do
     root to: 'dashboard#index'
 
     # Recursos del backoffice
-    resources :users
+    resources :users do
+      member { patch :confirm }
+    end
     resources :capsules do
       member do
         patch :approve

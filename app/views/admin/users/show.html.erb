@@ -1,7 +1,61 @@
-<p>
-  <strong>Atributo:</strong>
-  <%= @resource.email %>
-</p>
+<div class="d-flex align-items-center gap-2 mb-4">
+  <%= link_to admin_users_path, class: 'btn btn-sm btn-outline-secondary' do %>
+    &larr; Usuarios
+  <% end %>
+  <h1 class="h4 mb-0"><%= @user.email %></h1>
+  <span class="badge <%= @user.admin? ? 'bg-danger' : 'bg-secondary' %>">
+    <%= @user.admin? ? 'Admin' : 'Usuario' %>
+  </span>
+  <span class="badge <%= @user.confirmed? ? 'bg-success' : 'bg-warning text-dark' %>">
+    <%= @user.confirmed? ? 'Confirmado' : 'Sin confirmar' %>
+  </span>
+</div>
 
-<%= link_to 'Edit', [:edit, :admin, @resource] %> |
-<%= link_to 'Back', [:admin, controller_name.to_sym] %>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header fw-semibold">Datos</div>
+      <div class="card-body small">
+        <p class="mb-1"><strong>ID:</strong> <%= @user.id %></p>
+        <p class="mb-1"><strong>Email:</strong> <%= @user.email %></p>
+        <p class="mb-1"><strong>Admin:</strong> <%= @user.admin? ? 'Sí' : 'No' %></p>
+        <p class="mb-1"><strong>Registrado:</strong> <%= @user.created_at.strftime('%d/%m/%Y %H:%M') %></p>
+        <p class="mb-0"><strong>Cápsulas:</strong> <%= @user.capsules.count %></p>
+      </div>
+    </div>
+
+    <% if @user.capsules.any? %>
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Cápsulas</div>
+      <div class="list-group list-group-flush">
+        <% @user.capsules.order(created_at: :desc).each do |capsule| %>
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <span class="fw-medium"><%= capsule.title %></span>
+              <span class="badge <%= capsule.approved? ? 'bg-success' : 'bg-warning text-dark' %> ms-2">
+                <%= capsule.approved? ? 'Aprobada' : 'Pendiente' %>
+              </span>
+            </div>
+            <%= link_to 'Ver', admin_capsule_path(capsule), class: 'btn btn-sm btn-outline-primary' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Acciones</div>
+      <div class="card-body d-grid gap-2">
+        <%= link_to 'Editar', edit_admin_user_path(@user), class: 'btn btn-primary' %>
+        <% unless @user.confirmed? %>
+          <%= button_to 'Confirmar cuenta', confirm_admin_user_path(@user), method: :patch, class: 'btn btn-success' %>
+        <% end %>
+        <%= button_to 'Eliminar', admin_user_path(@user), method: :delete,
+            form: { data: { turbo_confirm: '¿Eliminás este usuario?' } },
+            class: 'btn btn-outline-danger' %>
+      </div>
+    </div>
+  </div>
+</div>

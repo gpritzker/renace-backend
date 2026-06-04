@@ -1,21 +1,28 @@
-<%= form_with(model: [:admin, resource], local: true) do |form| %>
-  <% if resource.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(resource.errors.count, "error") %> prohibited this record from being saved:</h2>
-      <ul>
-        <% resource.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+<%= form_with(model: [:admin, @user], local: true) do |form| %>
+  <% if @user.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :email %>
-    <%= form.text_field :email %>
+  <div class="mb-3">
+    <%= form.label :email, 'Email', class: 'form-label fw-semibold' %>
+    <%= form.email_field :email, class: 'form-control' %>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
+  <div class="mb-4">
+    <div class="form-check form-switch">
+      <%= form.check_box :admin, class: 'form-check-input', role: 'switch', id: 'adminSwitch' %>
+      <%= form.label :admin, 'Es administrador', class: 'form-check-label', for: 'adminSwitch' %>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= form.submit 'Guardar cambios', class: 'btn btn-primary px-4' %>
+    <%= link_to 'Cancelar', admin_user_path(@user), class: 'btn btn-outline-secondary' %>
   </div>
 <% end %>

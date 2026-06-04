@@ -1,21 +1,40 @@
 <%= form_with(model: [:admin, memory], local: true) do |form| %>
   <% if memory.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(memory.errors.count, "error") %> prohibited this record from being saved:</h2>
-      <ul>
-        <% memory.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% memory.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :content %>
-    <%= form.text_field :content %>
+  <div class="mb-3">
+    <%= form.label :content, 'Contenido', class: 'form-label fw-semibold' %>
+    <small class="text-muted d-block mb-1">Este texto será leído con la voz del usuario. Revisá que fluya naturalmente.</small>
+    <%= form.text_area :content, class: 'form-control', rows: 8 %>
+    <div class="form-text"><span id="mem-char-count">0</span> caracteres</div>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
+  <div class="mb-4">
+    <%= form.label :memory_type, 'Tipo', class: 'form-label fw-semibold' %>
+    <%= form.select :memory_type, Memory.memory_types.keys.map { |k| [k.capitalize, k] }, {}, class: 'form-select' %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= form.submit 'Guardar cambios', class: 'btn btn-primary px-4' %>
+    <% if memory.persisted? %>
+      <%= link_to 'Cancelar', admin_memory_path(memory), class: 'btn btn-outline-secondary' %>
+    <% end %>
   </div>
 <% end %>
+
+<script>
+  const ta = document.querySelector('#mem-char-count') && document.querySelector('textarea');
+  const counter = document.getElementById('mem-char-count');
+  if (ta && counter) {
+    const update = () => counter.textContent = ta.value.length;
+    update();
+    ta.addEventListener('input', update);
+  }
+</script>

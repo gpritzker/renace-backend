@@ -1,15 +1,46 @@
-<p>
-  <strong>Contenido:</strong>
-  <%= @memory.content %>
-</p>
-<p>
-  <strong>Tipo:</strong>
-  <%= @memory.memory_type %>
-</p>
-<p>
-  <strong>Cápsula:</strong>
-  <%= @memory.capsule&.title || 'Sin cápsula' %>
-</p>
+<div class="d-flex align-items-center gap-2 mb-4">
+  <%= link_to admin_memories_path, class: 'btn btn-sm btn-outline-secondary' do %>
+    &larr; Recuerdos
+  <% end %>
+  <h1 class="h4 mb-0">Recuerdo #<%= @memory.id %></h1>
+  <span class="badge bg-secondary"><%= @memory.memory_type %></span>
+</div>
 
-<%= link_to 'Edit', [:edit, :admin, @memory] %> |
-<%= link_to 'Back', [:admin, :memories] %>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold">Contenido</span>
+        <%= link_to 'Editar', edit_admin_memory_path(@memory), class: 'btn btn-sm btn-outline-primary' %>
+      </div>
+      <div class="card-body">
+        <p class="mb-0" style="white-space: pre-wrap; line-height: 1.7"><%= @memory.content %></p>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Cápsula asociada</div>
+      <div class="card-body small">
+        <% if @memory.capsule %>
+          <p class="mb-1"><strong>Título:</strong> <%= @memory.capsule.title %></p>
+          <p class="mb-0"><strong>Usuario:</strong> <%= @memory.capsule.user.email %></p>
+          <%= link_to 'Ver cápsula', admin_capsule_path(@memory.capsule), class: 'btn btn-sm btn-outline-secondary mt-2' %>
+        <% else %>
+          <p class="text-muted mb-0">Sin cápsula asociada</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Acciones</div>
+      <div class="card-body d-grid gap-2">
+        <%= link_to 'Editar', edit_admin_memory_path(@memory), class: 'btn btn-primary' %>
+        <%= button_to 'Eliminar', admin_memory_path(@memory), method: :delete,
+            form: { data: { turbo_confirm: '¿Eliminás este recuerdo?' } },
+            class: 'btn btn-outline-danger' %>
+      </div>
+    </div>
+  </div>
+</div>
