@@ -1,12 +1,74 @@
-<h1><%= @capsule.title %></h1>
-<p><%= @capsule.description %></p>
-<p><strong>Approved:</strong> <%= @capsule.approved ? 'Yes' : 'No' %></p>
-<p><strong>User:</strong> <%= @capsule.user.email %></p>
+<div class="d-flex align-items-center gap-2 mb-4">
+  <%= link_to admin_capsules_path, class: 'btn btn-sm btn-outline-secondary' do %>
+    &larr; Cápsulas
+  <% end %>
+  <h1 class="h4 mb-0"><%= @capsule.title %></h1>
+  <span class="badge <%= @capsule.approved? ? 'bg-success' : 'bg-warning text-dark' %>">
+    <%= @capsule.approved? ? 'Aprobada' : 'Pendiente' %>
+  </span>
+</div>
 
-<%= link_to 'Edit', edit_admin_capsule_path(@capsule) %> |
-<%= link_to 'Back', admin_capsules_path %> |
-<% if @capsule.approved? %>
-  <%= button_to 'Disapprove', disapprove_admin_capsule_path(@capsule), method: :patch %>
-<% else %>
-  <%= button_to 'Approve', approve_admin_capsule_path(@capsule), method: :patch %>
-<% end %>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold">Relato / Descripción</span>
+        <%= link_to 'Editar', edit_admin_capsule_path(@capsule), class: 'btn btn-sm btn-outline-primary' %>
+      </div>
+      <div class="card-body">
+        <p class="mb-0" style="white-space: pre-wrap; line-height: 1.7"><%= @capsule.description %></p>
+      </div>
+    </div>
+
+    <% if @capsule.memories.any? %>
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Memorias (<%= @capsule.memories.count %>)</div>
+      <div class="list-group list-group-flush">
+        <% @capsule.memories.each do |m| %>
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <span class="badge bg-secondary me-2"><%= m.memory_type %></span>
+                <% if m.text? %>
+                  <span class="small"><%= m.content %></span>
+                <% else %>
+                  <span class="small text-muted">Archivo adjunto</span>
+                <% end %>
+              </div>
+              <%= link_to 'Editar', edit_admin_memory_path(m), class: 'btn btn-xs btn-outline-secondary btn-sm py-0 px-2 ms-2' %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header fw-semibold">Datos</div>
+      <div class="card-body small">
+        <p class="mb-1"><strong>Usuario:</strong> <%= @capsule.user.email %></p>
+        <p class="mb-1"><strong>Creada:</strong> <%= @capsule.created_at.strftime('%d/%m/%Y %H:%M') %></p>
+        <% if @capsule.open_at %>
+          <p class="mb-1"><strong>Apertura:</strong> <%= @capsule.open_at.strftime('%d/%m/%Y %H:%M') %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Acciones</div>
+      <div class="card-body d-grid gap-2">
+        <%= link_to 'Editar', edit_admin_capsule_path(@capsule), class: 'btn btn-primary' %>
+        <% if @capsule.approved? %>
+          <%= button_to 'Desaprobar', disapprove_admin_capsule_path(@capsule), method: :patch, class: 'btn btn-outline-warning' %>
+        <% else %>
+          <%= button_to 'Aprobar', approve_admin_capsule_path(@capsule), method: :patch, class: 'btn btn-success' %>
+        <% end %>
+        <%= button_to 'Eliminar', admin_capsule_path(@capsule), method: :delete,
+            form: { data: { turbo_confirm: '¿Eliminás esta cápsula?' } },
+            class: 'btn btn-outline-danger' %>
+      </div>
+    </div>
+  </div>
+</div>

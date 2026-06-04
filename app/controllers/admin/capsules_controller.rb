@@ -41,6 +41,6 @@ class Admin::CapsulesController < Admin::BaseController
     private
   
     def capsule_params
-      params.require(:capsule).permit(:approved)
+      params.require(:capsule).permit(:title, :description, :approved, :open_at)
     end
   end

@@ -1,5 +1,46 @@
-<h1>Editar cápsula</h1>
+<div class="d-flex align-items-center gap-2 mb-4">
+  <%= link_to admin_capsule_path(@capsule), class: 'btn btn-sm btn-outline-secondary' do %>
+    &larr; Volver
+  <% end %>
+  <h1 class="h4 mb-0">Editar cápsula</h1>
+  <span class="badge <%= @capsule.approved? ? 'bg-success' : 'bg-warning text-dark' %>">
+    <%= @capsule.approved? ? 'Aprobada' : 'Pendiente' %>
+  </span>
+</div>
 
-<%= render 'form', capsule: @capsule %>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <%= render 'form', capsule: @capsule %>
+      </div>
+    </div>
+  </div>
 
-<%= link_to 'Volver', admin_capsules_path %>
+  <div class="col-lg-4">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header fw-semibold">Info</div>
+      <div class="card-body small">
+        <p class="mb-1"><strong>Usuario:</strong> <%= @capsule.user.email %></p>
+        <p class="mb-1"><strong>Creada:</strong> <%= @capsule.created_at.strftime('%d/%m/%Y %H:%M') %></p>
+        <p class="mb-0"><strong>Memorias:</strong> <%= @capsule.memories.count %></p>
+      </div>
+    </div>
+
+    <% if @capsule.memories.any? %>
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">Memorias de texto</div>
+      <div class="list-group list-group-flush">
+        <% @capsule.memories.where(memory_type: 'text').each do |m| %>
+          <div class="list-group-item small">
+            <p class="mb-0 text-truncate" title="<%= m.content %>"><%= m.content %></p>
+            <div class="mt-1">
+              <%= link_to 'Editar', edit_admin_memory_path(m), class: 'btn btn-xs btn-outline-secondary btn-sm py-0 px-1' %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>
