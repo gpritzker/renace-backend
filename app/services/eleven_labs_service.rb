@@ -40,16 +40,31 @@ class ElevenLabsService
     JSON.parse(response.body)['voice_id']
   end
 
-  # Genera audio en la voz clonada. Retorna bytes de MP3 alta calidad.
+  # Genera audio en la voz clonada. Retorna bytes de MP3 (cacheado 30 días).
   def generate_speech(voice_id:, text:)
-    uri = URI("#{BASE_URL}/text-to-speech/#{voice_id}?output_format=mp3_44100_192")
+    CachedAudio.fetch(voice_id: voice_id, text: text) do
+      call_elevenlabs_tts(voice_id: voice_id, text: text)
+    end
+  end
+
+  def delete_voice(voice_id)
+    uri = URI("#{BASE_URL}/voices/#{voice_id}")
+    req = Net::HTTP::Delete.new(uri)
+    req['xi-api-key'] = @api_key
+    Net::HTTP.start(uri.host, uri.port, use_ssl: true) { |h| h.request(req) }
+  end
+
+  private
+
+  def call_elevenlabs_tts(voice_id:, text:)
+    uri = URI("#{BASE_URL}/text-to-speech/#{voice_id}?output_format=mp3_44100_128")
     req = Net::HTTP::Post.new(uri)
     req['xi-api-key'] = @api_key
     req['Content-Type'] = 'application/json'
     req['Accept'] = 'audio/mpeg'
     req.body = {
       text: text,
-      model_id: 'eleven_multilingual_v2',
+      model_id: 'eleven_turbo_v2_5',
       voice_settings: {
         stability: 0.3,
         similarity_boost: 1.0,
@@ -62,12 +77,5 @@ class ElevenLabsService
     raise "ElevenLabs TTS error: #{response.body}" unless response.is_a?(Net::HTTPSuccess)
 
     response.body
-  end
-
-  def delete_voice(voice_id)
-    uri = URI("#{BASE_URL}/voices/#{voice_id}")
-    req = Net::HTTP::Delete.new(uri)
-    req['xi-api-key'] = @api_key
-    Net::HTTP.start(uri.host, uri.port, use_ssl: true) { |h| h.request(req) }
   end
 end
