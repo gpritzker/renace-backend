@@ -6,13 +6,7 @@ module Api
       respond_to :json
       skip_before_action :verify_authenticity_token
 
-      def create
-        super do |resource|
-          # Auto-confirmar si el usuario fue creado exitosamente
-          resource.confirm! if resource.persisted? && !resource.confirmed?
-        end
-      end
-
+      # skip_confirmation! antes de guardar: no envía email y el usuario queda confirmado al crearse
       private
 
       def respond_with(resource, _opts = {})

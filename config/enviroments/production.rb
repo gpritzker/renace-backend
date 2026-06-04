@@ -15,7 +15,21 @@ Rails.application.configure do
 
   config.active_job.queue_adapter = :sidekiq
 
-  config.action_mailer.default_url_options = { host: 'api.renace.com.ar' }
+  config.action_mailer.default_url_options = { host: ENV.fetch('BACKEND_HOST', 'renace-backend.onrender.com'), protocol: 'https' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.resend.com',
+    port:                 587,
+    user_name:            'resend',
+    password:             ENV['RESEND_API_KEY'],
+    authentication:       :plain,
+    enable_starttls_auto: true
+  }
+  config.action_mailer.default_options = {
+    from: ENV.fetch('MAILER_FROM', 'Renace <noreply@renace.com.ar>')
+  }
 
   config.log_level = :info
   config.logger = Logger.new($stdout)
