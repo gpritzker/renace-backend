@@ -11,6 +11,10 @@ module Api
         else
           render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
         end
+      rescue => e
+        Rails.logger.error "[PasswordsController] Mail error: #{e.class} - #{e.message}"
+        # Respondemos OK igual para no revelar si el email existe
+        render json: { message: 'Si el email está registrado, vas a recibir las instrucciones.' }, status: :ok
       end
 
       def update
