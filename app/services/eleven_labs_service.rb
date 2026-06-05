@@ -43,10 +43,14 @@ class ElevenLabsService
   end
 
   # Genera audio en la voz clonada. Retorna bytes de MP3 (cacheado 30 días).
+  # Textos largos se parten en párrafos para evitar timeouts.
   def generate_speech(voice_id:, text:)
-    CachedAudio.fetch(voice_id: voice_id, text: text) do
-      call_elevenlabs_tts(voice_id: voice_id, text: text)
-    end
+    chunks = split_into_chunks(text)
+    chunks.map do |chunk|
+      CachedAudio.fetch(voice_id: voice_id, text: chunk) do
+        call_elevenlabs_tts(voice_id: voice_id, text: chunk)
+      end
+    end.join
   end
 
   def delete_voice(voice_id)
@@ -57,6 +61,25 @@ class ElevenLabsService
   end
 
   private
+
+  def split_into_chunks(text, max_chars: 600)
+    paragraphs = text.split(/\n+/).map(&:strip).reject(&:empty?)
+    chunks = []
+    current = +''
+
+    paragraphs.each do |para|
+      if current.empty?
+        current << para
+      elsif current.length + para.length + 1 <= max_chars
+        current << "\n" << para
+      else
+        chunks << current
+        current = +para
+      end
+    end
+    chunks << current unless current.empty?
+    chunks
+  end
 
   def call_elevenlabs_tts(voice_id:, text:)
     uri = URI("#{BASE_URL}/text-to-speech/#{voice_id}?output_format=mp3_44100_128")
@@ -75,7 +98,7 @@ class ElevenLabsService
       }
     }.to_json
 
-    response = Net::HTTP.start(uri.host, uri.port, use_ssl: true, read_timeout: 30) { |h| h.request(req) }
+    response = Net::HTTP.start(uri.host, uri.port, use_ssl: true, open_timeout: 5, read_timeout: 25) { |h| h.request(req) }
     raise "ElevenLabs TTS error: #{response.body}" unless response.is_a?(Net::HTTPSuccess)
 
     response.body

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_06_04_180000) do
+ActiveRecord::Schema[7.1].define(version: 2026_06_05_173719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -43,11 +43,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_06_04_180000) do
   end
 
   create_table "cached_audios", force: :cascade do |t|
-    t.string "cache_key", null: false
+    t.string "lookup_key", null: false
     t.datetime "expires_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["cache_key"], name: "index_cached_audios_on_cache_key", unique: true
+    t.index ["lookup_key"], name: "index_cached_audios_on_lookup_key", unique: true
   end
 
   create_table "capsules", force: :cascade do |t|

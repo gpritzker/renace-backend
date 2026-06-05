@@ -15,7 +15,7 @@ class ConversationService
 
   def chat(message:, history: [])
     text = with_retries { generate_text(message: message, history: history) }
-    audio = generate_audio(text)
+    audio = generate_audio(text, retries: 1)
     { text: text, audio: audio }
   end
 
@@ -43,9 +43,9 @@ class ConversationService
     content
   end
 
-  def generate_audio(text)
+  def generate_audio(text, retries: 1)
     return nil unless @user.elevenlabs_voice_id.present?
-    with_retries { ElevenLabsService.new.generate_speech(voice_id: @user.elevenlabs_voice_id, text: text) }
+    with_retries(retries: retries) { ElevenLabsService.new.generate_speech(voice_id: @user.elevenlabs_voice_id, text: text) }
   rescue => e
     Rails.logger.error "ElevenLabs TTS falló: #{e.message}"
     nil
