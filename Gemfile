@@ -18,6 +18,7 @@ gem 'rack-cors'
 gem "rails", "~> 7.1.3"
 gem 'spring', '>= 3.1.0' # Asegura una versión compatible de Spring
 gem 'sidekiq'
+gem "redis-client", "0.22.2"
 gem 'rack-session'  # Necesario para manejar sesiones en API-only
 gem "tailwindcss-rails"
 gem 'sprockets-rails'
