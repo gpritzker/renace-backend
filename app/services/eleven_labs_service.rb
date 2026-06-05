@@ -24,6 +24,8 @@ class ElevenLabsService
     body << "--#{boundary}\r\nContent-Disposition: form-data; name=\"description\"\r\n\r\nVoz clonada de usuario Renace\r\n"
     body << "--#{boundary}\r\nContent-Disposition: form-data; name=\"remove_background_noise\"\r\n\r\ntrue\r\n"
 
+    audio_blobs = audio_blobs.uniq(&:checksum)
+
     audio_blobs.each_with_index do |blob, i|
       filename = blob.filename.to_s
       content_type = blob.content_type || 'audio/webm'
@@ -64,11 +66,11 @@ class ElevenLabsService
     req['Accept'] = 'audio/mpeg'
     req.body = {
       text: text,
-      model_id: 'eleven_turbo_v2_5',
+      model_id: 'eleven_multilingual_v2',
       voice_settings: {
-        stability: 0.3,
-        similarity_boost: 1.0,
-        style: 0.2,
+        stability: 0.5,
+        similarity_boost: 0.85,
+        style: 0.1,
         use_speaker_boost: true
       }
     }.to_json

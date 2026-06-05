@@ -1,5 +1,9 @@
 require 'sidekiq/web'
 Rails.application.routes.draw do
+  Sidekiq::Web.use(Rack::Auth::Basic) do |user, pass|
+    user == ENV.fetch('SIDEKIQ_USER', 'admin') &&
+      pass == ENV.fetch('SIDEKIQ_PASSWORD', 'changeme')
+  end
   mount Sidekiq::Web => '/sidekiq'
   # =========================
   # 🔐 API AUTH - JWT + Devise

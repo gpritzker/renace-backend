@@ -14,6 +14,9 @@ module Api
 
       # POST /api/v1/voice_samples
       def create_sample
+        current_user.voice_samples.each { |s| s.audio.purge; s.destroy }
+        current_user.update(voice_clone_status: 'none', elevenlabs_voice_id: nil)
+
         sample = current_user.voice_samples.new
         sample.audio.attach(params[:audio])
         if sample.save
