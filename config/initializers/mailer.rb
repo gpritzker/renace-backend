@@ -1,3 +1,9 @@
+ActionMailer::Base.default_url_options = if Rails.env.production?
+  { host: ENV.fetch('BACKEND_HOST', 'renace-backend.onrender.com'), protocol: 'https' }
+else
+  { host: 'localhost', port: 3000 }
+end
+
 if Rails.env.production? && ENV['RESEND_API_KEY'].present?
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.perform_deliveries = true

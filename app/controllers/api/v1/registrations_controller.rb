@@ -6,8 +6,13 @@ module Api
       respond_to :json
       skip_before_action :verify_authenticity_token
 
-      # skip_confirmation! antes de guardar: no envía email y el usuario queda confirmado al crearse
+      before_action :skip_confirmation_in_development, only: :create
+
       private
+
+      def skip_confirmation_in_development
+        resource_class.skip_confirmation! if Rails.env.development?
+      end
 
       def respond_with(resource, _opts = {})
         if resource.persisted?

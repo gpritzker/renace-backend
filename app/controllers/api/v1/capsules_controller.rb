@@ -22,6 +22,7 @@ module Api
       def create
         capsule = current_user.capsules.build(capsule_params)
         if capsule.save
+          capsule.approve! if current_user.capsules.count == 1
           render json: capsule, status: :created
         else
           render json: { errors: capsule.errors.full_messages }, status: :unprocessable_entity
