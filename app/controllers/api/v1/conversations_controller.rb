@@ -31,7 +31,11 @@ module Api
           text: result[:text],
           audio_base64: result[:audio] ? Base64.strict_encode64(result[:audio]) : nil
         }
+      rescue ConversationService::RateLimitError => e
+        Rails.logger.warn "ConversationsController rate limit: #{e.message}"
+        render json: { error: 'Demasiadas solicitudes. Esperá unos segundos e intentá de nuevo.' }, status: :too_many_requests
       rescue => e
+        Rails.logger.error "ConversationsController error: #{e.class}: #{e.message}\n#{e.backtrace.first(3).join("\n")}"
         render json: { error: e.message }, status: :internal_server_error
       end
     end
