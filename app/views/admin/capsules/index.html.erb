@@ -24,8 +24,12 @@
           <td><%= capsule.user.email %></td>
           <td>
             <%= link_to 'Ver', admin_capsule_path(capsule), class: 'btn btn-sm btn-outline-primary me-1' %>
-            <%= link_to 'Editar', edit_admin_capsule_path(capsule), class: 'btn btn-sm btn-outline-warning me-1' %>
-            <%= link_to 'Eliminar', admin_capsule_path(capsule), method: :delete, data: { confirm: '¿Estás seguro?' }, class: 'btn btn-sm btn-outline-danger' %>
+            <% if capsule.approved? %>
+              <%= button_to 'Desaprobar', disapprove_admin_capsule_path(capsule), method: :patch, class: 'btn btn-sm btn-outline-warning me-1' %>
+            <% else %>
+              <%= button_to 'Aprobar', approve_admin_capsule_path(capsule), method: :patch, class: 'btn btn-sm btn-success me-1' %>
+            <% end %>
+            <%= button_to 'Eliminar', admin_capsule_path(capsule), method: :delete, form: { data: { turbo_confirm: '¿Eliminás esta cápsula?' } }, class: 'btn btn-sm btn-outline-danger' %>
           </td>
         </tr>
       <% end %>
