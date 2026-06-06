@@ -66,6 +66,10 @@ Rails.application.routes.draw do
       # Bot conversacional (público)
       post 'capsules/:capsule_id/chat', to: 'conversations#chat'
 
+      # Perfil de usuario
+      get   'profile', to: 'profile#show'
+      patch 'profile', to: 'profile#update'
+
       # Perfil de voz e IA
       get    'voice_profile',         to: 'voice_profiles#show'
       post   'voice_samples',         to: 'voice_profiles#create_sample'
