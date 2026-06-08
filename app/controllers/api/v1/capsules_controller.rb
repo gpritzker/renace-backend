@@ -33,7 +33,12 @@ module Api
       def update
         capsule = current_user.capsules.find(params[:id])
         if capsule.update(capsule_params)
-          schedule_notification(capsule)
+          if capsule.open_at.blank?
+            cancel_existing_job(capsule.sidekiq_jid)
+            capsule.update_column(:sidekiq_jid, nil)
+          else
+            schedule_notification(capsule)
+          end
           render json: capsule
         else
           render json: { errors: capsule.errors.full_messages }, status: :unprocessable_entity
@@ -59,7 +64,18 @@ module Api
       def schedule_notification(capsule)
         return if capsule.open_at.blank? || capsule.recipient_email.blank?
         return if capsule.open_at <= Time.current
-        SendCapsuleNotificationWorker.perform_at(capsule.open_at, capsule.id)
+
+        cancel_existing_job(capsule.sidekiq_jid)
+
+        jid = SendCapsuleNotificationWorker.perform_at(capsule.open_at, capsule.id)
+        capsule.update_column(:sidekiq_jid, jid)
+      end
+
+      def cancel_existing_job(jid)
+        return if jid.blank?
+        Sidekiq::ScheduledSet.new.each do |job|
+          job.delete if job.jid == jid
+        end
       end
     end
   end

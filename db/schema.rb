@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_06_06_125456) do
+ActiveRecord::Schema[7.1].define(version: 2026_06_08_181023) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_06_06_125456) do
     t.datetime "open_at"
     t.boolean "approved"
     t.string "recipient_email"
+    t.string "sidekiq_jid"
     t.index ["user_id"], name: "index_capsules_on_user_id"
   end
 
