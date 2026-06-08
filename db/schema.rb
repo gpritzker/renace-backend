@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_06_06_114532) do
+ActiveRecord::Schema[7.1].define(version: 2026_06_06_125456) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -58,6 +58,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_06_06_114532) do
     t.datetime "updated_at", null: false
     t.datetime "open_at"
     t.boolean "approved"
+    t.string "recipient_email"
     t.index ["user_id"], name: "index_capsules_on_user_id"
   end
 
@@ -99,6 +100,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_06_06_114532) do
     t.string "dni"
     t.date "birth_date"
     t.string "phone"
+    t.boolean "premium", default: false
+    t.string "mp_subscription_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true

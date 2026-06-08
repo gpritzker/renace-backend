@@ -70,6 +70,10 @@ Rails.application.routes.draw do
       get   'profile', to: 'profile#show'
       patch 'profile', to: 'profile#update'
 
+      # Billing / MercadoPago
+      post 'billing/checkout', to: 'billing#checkout'
+      post 'billing/cancel',   to: 'billing#cancel'
+
       # Perfil de voz e IA
       get    'voice_profile',         to: 'voice_profiles#show'
       post   'voice_samples',         to: 'voice_profiles#create_sample'
@@ -78,6 +82,11 @@ Rails.application.routes.draw do
       post   'voice_profile/preview', to: 'voice_profiles#preview'
     end
   end
+
+  # =========================
+  # 💳 Stripe Webhook (público, sin auth)
+  # =========================
+  post '/webhooks/mercadopago', to: 'webhooks/mercado_pago#receive'
 
   # =========================
   # 🌐 Root general (redirige a login admin)

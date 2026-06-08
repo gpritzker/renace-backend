@@ -22,7 +22,8 @@ module Api
       def create
         capsule = current_user.capsules.build(capsule_params)
         if capsule.save
-          capsule.approve! if current_user.capsules.count == 1
+          capsule.approve! if current_user.capsules.count == 1 || current_user.premium?
+          schedule_notification(capsule)
           render json: capsule, status: :created
         else
           render json: { errors: capsule.errors.full_messages }, status: :unprocessable_entity
@@ -32,6 +33,7 @@ module Api
       def update
         capsule = current_user.capsules.find(params[:id])
         if capsule.update(capsule_params)
+          schedule_notification(capsule)
           render json: capsule
         else
           render json: { errors: capsule.errors.full_messages }, status: :unprocessable_entity
@@ -51,7 +53,13 @@ module Api
       private
 
       def capsule_params
-        params.require(:capsule).permit(:title, :description, :open_at)
+        params.require(:capsule).permit(:title, :description, :open_at, :recipient_email)
+      end
+
+      def schedule_notification(capsule)
+        return if capsule.open_at.blank? || capsule.recipient_email.blank?
+        return if capsule.open_at <= Time.current
+        SendCapsuleNotificationWorker.perform_at(capsule.open_at, capsule.id)
       end
     end
   end
