@@ -26,6 +26,7 @@ module Webhooks
 
       data = response.parsed_response
       user = User.find_by(id: data['external_reference'])
+      user ||= User.find_by(email: data.dig('payer', 'email'))
       return unless user
 
       case data['status']

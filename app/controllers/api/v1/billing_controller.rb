@@ -16,7 +16,8 @@ module Api
             preapproval_plan_id: plan_id,
             payer_email: current_user.email,
             back_url: "#{ENV['FRONTEND_URL']}/billing/success",
-            external_reference: current_user.id.to_s
+            external_reference: current_user.id.to_s,
+            status: 'pending'
           }.to_json
         )
 
