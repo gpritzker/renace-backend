@@ -39,7 +39,10 @@ Rails.application.routes.draw do
 
     # Recursos del backoffice
     resources :users do
-      member { patch :confirm }
+      member do
+        patch :confirm
+        patch :toggle_premium
+      end
     end
     resources :capsules do
       member do

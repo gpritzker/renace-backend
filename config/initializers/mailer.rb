@@ -4,10 +4,10 @@ else
   { host: 'localhost', port: 3000 }
 end
 
-if Rails.env.production? && ENV['RESEND_API_KEY'].present?
+if ENV['RESEND_API_KEY'].present?
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.perform_deliveries = true
-  ActionMailer::Base.raise_delivery_errors = false
+  ActionMailer::Base.raise_delivery_errors = true
   ActionMailer::Base.smtp_settings = {
     address:              'smtp.resend.com',
     port:                 587,

@@ -2,15 +2,22 @@
 
 <% if @users.any? %>
   <div class="mb-3">
-    <h5>Total de usuarios: <strong><%= @users.count %></strong></h5>
+    <h5>Total: <strong><%= @users.count %></strong> &nbsp;·&nbsp;
+      Premium: <strong><%= @users.where(premium: true).count %></strong> &nbsp;·&nbsp;
+      Gratis: <strong><%= @users.where(premium: false).count %></strong>
+    </h5>
   </div>
 
-  <table class="table table-striped table-hover">
+  <table class="table table-striped table-hover align-middle">
     <thead class="table-dark">
       <tr>
         <th>ID</th>
         <th>Email</th>
-        <th>Admin</th>
+        <th>Nombre</th>
+        <th>Plan</th>
+        <th>Confirmado</th>
+        <th>Aprobado</th>
+        <th>Cápsulas</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -19,11 +26,32 @@
         <tr>
           <td><%= user.id %></td>
           <td><%= user.email %></td>
-          <td><%= user.admin? ? 'Sí' : 'No' %></td>
+          <td><%= [user.first_name, user.last_name].compact.join(' ').presence || '—' %></td>
+          <td>
+            <% if user.premium? %>
+              <span class="badge bg-warning text-dark">⭐ Premium</span>
+            <% else %>
+              <span class="badge bg-secondary">Gratis</span>
+            <% end %>
+          </td>
+          <td>
+            <% if user.confirmed? %>
+              <span class="badge bg-success">Sí</span>
+            <% else %>
+              <span class="badge bg-danger">No</span>
+            <% end %>
+          </td>
+          <td>
+            <%= user.approved_at ? user.approved_at.strftime('%d/%m/%Y') : '—' %>
+          </td>
+          <td><%= user.capsules.count %></td>
           <td>
             <%= link_to 'Ver', admin_user_path(user), class: 'btn btn-sm btn-outline-primary me-1' %>
             <%= link_to 'Editar', edit_admin_user_path(user), class: 'btn btn-sm btn-outline-warning me-1' %>
-            <%= link_to 'Eliminar', admin_user_path(user), method: :delete, data: { confirm: '¿Estás seguro?' }, class: 'btn btn-sm btn-outline-danger' %>
+            <%= button_to user.premium? ? 'Quitar Premium' : 'Dar Premium',
+                toggle_premium_admin_user_path(user),
+                method: :patch,
+                class: "btn btn-sm #{user.premium? ? 'btn-outline-secondary' : 'btn-success'} me-1" %>
           </td>
         </tr>
       <% end %>
@@ -35,5 +63,5 @@
 
 <div class="d-flex justify-content-between mt-4">
   <%= link_to 'Crear nuevo usuario', new_admin_user_path, class: 'btn btn-primary' %>
-  <%= link_to 'Volver', admin_dashboard_path, class: 'btn btn-secondary' %> <!-- ajustá el destino si querés -->
+  <%= link_to 'Volver', admin_dashboard_path, class: 'btn btn-secondary' %>
 </div>

@@ -13,8 +13,15 @@ module Api
           open_at: capsule.open_at,
           has_voice: capsule.user.elevenlabs_voice_id.present?,
           owner_name: capsule.user.email.split('@').first,
-          memories: capsule.memories.where(memory_type: 'text').order(:created_at).map do |m|
+          text_memories: capsule.memories.where(memory_type: 'text').order(:created_at).map do |m|
             { id: m.id, content: m.content }
+          end,
+          media_memories: capsule.memories.where.not(memory_type: 'text').order(:created_at).map do |m|
+            {
+              id: m.id,
+              memory_type: m.memory_type,
+              url: m.file.attached? ? m.file.blob.service.url(m.file.key, expires_in: 1.hour, disposition: 'inline', filename: m.file.filename, content_type: m.file.blob.content_type) : nil
+            }
           end
         }
       end

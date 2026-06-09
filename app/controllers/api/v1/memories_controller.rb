@@ -5,6 +5,7 @@ module Api
 
       def index
         memories = Memory.joins(:capsule).where(capsules: { user_id: current_user.id })
+        memories = memories.where(capsule_id: params[:capsule_id]) if params[:capsule_id].present?
         render json: memories
       end
 

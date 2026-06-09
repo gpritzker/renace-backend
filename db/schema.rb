@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_06_08_181023) do
+ActiveRecord::Schema[7.1].define(version: 2026_06_08_194637) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -103,6 +103,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_06_08_181023) do
     t.string "phone"
     t.boolean "premium", default: false
     t.string "mp_subscription_id"
+    t.datetime "approved_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
