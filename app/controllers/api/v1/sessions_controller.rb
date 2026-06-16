@@ -3,6 +3,8 @@
 module Api
   module V1
     class SessionsController < Devise::SessionsController
+      include Auditable
+
       respond_to :json
       skip_before_action :verify_authenticity_token
 
@@ -10,6 +12,7 @@ module Api
 
       def respond_with(resource, _opts = {})
         token = request.env['warden-jwt_auth.token']
+        audit('login', resource: resource)
 
         render json: {
           status: { code: 200, message: 'Logged in successfully.' },
@@ -20,15 +23,10 @@ module Api
 
       def respond_to_on_destroy
         if current_user
-          render json: {
-            status: 200,
-            message: "Logged out successfully."
-          }, status: :ok
+          audit('logout', resource: current_user)
+          render json: { status: 200, message: "Logged out successfully." }, status: :ok
         else
-          render json: {
-            status: 401,
-            message: "Couldn't find an active session."
-          }, status: :unauthorized
+          render json: { status: 401, message: "Couldn't find an active session." }, status: :unauthorized
         end
       end
     end

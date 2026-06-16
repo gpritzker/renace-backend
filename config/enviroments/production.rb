@@ -1,21 +1,22 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  
   Rails.application.routes.default_url_options[:host] = 'https://api.renace.com.ar'
 
-  config.assets.compile = false
-  config.assets.precompile += %w( application.js application.css )
   config.cache_classes = true
   config.eager_load = true
-
   config.consider_all_requests_local = false
 
   config.active_storage.service = :amazon
-
   config.active_job.queue_adapter = :sidekiq
 
-  config.action_mailer.default_url_options = { host: ENV.fetch('BACKEND_HOST', 'renace-backend.onrender.com'), protocol: 'https' }
+  # HTTPS obligatorio + HSTS 1 año con subdomains y preload
+  config.force_ssl = true
+  config.ssl_options = {
+    hsts: { subdomains: true, preload: true, expires: 1.year }
+  }
+
+  config.action_mailer.default_url_options = { host: ENV.fetch('BACKEND_HOST', 'api.renace.com.ar'), protocol: 'https' }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false
@@ -33,6 +34,8 @@ Rails.application.configure do
 
   config.log_level = :info
   config.logger = Logger.new($stdout)
-  config.assets.debug = true
-  config.force_ssl = true
+
+  config.assets.compile = false
+  config.assets.debug   = false
+  config.assets.precompile += %w[application.js application.css]
 end

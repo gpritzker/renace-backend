@@ -2,6 +2,8 @@ module Api
   module V1
     class MemoriesController < ActionController::API
       before_action :authenticate_user!
+      before_action :set_owned_capsule, only: [:create]
+      before_action :set_owned_memory, only: [:show, :update, :destroy]
 
       def index
         memories = Memory.joins(:capsule).where(capsules: { user_id: current_user.id })
@@ -10,11 +12,8 @@ module Api
       end
 
       def create
-        memory = Memory.new(memory_params)
-        if memory.save! && memory.capsule.user_id == current_user.id
-          # If the memory is saved successfully, we can send a notification
-          # to the user about the new memory.
-          # NotificationWorker.perform_async(memory.id)
+        memory = @capsule.memories.build(memory_params)
+        if memory.save
           render json: memory, status: :created
         else
           render json: { errors: memory.errors.full_messages }, status: :unprocessable_entity
@@ -22,37 +21,36 @@ module Api
       end
 
       def update
-        memory = Memory.find(params[:id])
-        if memory.capsule.user_id == current_user.id && memory.update(memory_params)
-          render json: memory
+        if @memory.update(memory_params)
+          render json: @memory
         else
-          render json: { errors: memory.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @memory.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
       def show
-        memory = Memory.find_by(id: params[:id])
-        if memory && memory.capsule.user_id == current_user.id
-          render json: memory
-        else
-          render json: { error: "Memory not found" }, status: :not_found
-        end
+        render json: @memory
       end
 
       def destroy
-        memory = Memory.find_by(id: params[:id])
-        if memory && memory.capsule.user_id == current_user.id
-          memory.destroy
-          render json: { message: "Memory deleted" }
-        else
-          render json: { error: "Memory not found or not authorized" }, status: :not_found
-        end
+        @memory.destroy
+        render json: { message: "Memory deleted" }
       end
 
       private
 
+      def set_owned_capsule
+        @capsule = current_user.capsules.find_by(id: params.dig(:memory, :capsule_id))
+        render json: { error: "Capsule not found" }, status: :not_found unless @capsule
+      end
+
+      def set_owned_memory
+        @memory = Memory.joins(:capsule).where(capsules: { user_id: current_user.id }).find_by(id: params[:id])
+        render json: { error: "Memory not found" }, status: :not_found unless @memory
+      end
+
       def memory_params
-        params.require(:memory).permit(:capsule_id, :content, :media_url, :memory_type, :file)
+        params.require(:memory).permit(:content, :memory_type, :file)
       end
     end
   end

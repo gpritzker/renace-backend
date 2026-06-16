@@ -12,3 +12,14 @@
 /node_modules
 
 /config/credentials/production.key
+
+# Redis dump — puede contener datos de sesión en memoria
+dump.rdb
+
+# Archivos de entorno locales
+.env.local
+.env.production
+
+# Archivos de editor
+.DS_Store
+*.swp

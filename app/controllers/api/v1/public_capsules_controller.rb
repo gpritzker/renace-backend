@@ -1,6 +1,7 @@
 module Api
   module V1
     class PublicCapsulesController < ActionController::API
+      MAX_NARRATE_TEXT_LENGTH = 2000
 
       def show
         capsule = Capsule.approved.find_by(id: params[:id])
@@ -12,7 +13,8 @@ module Api
           description: capsule.description,
           open_at: capsule.open_at,
           has_voice: capsule.user.elevenlabs_voice_id.present?,
-          owner_name: capsule.user.email.split('@').first,
+          # Nunca exponer el email del dueño en endpoints públicos
+          owner_name: capsule.user.first_name,
           text_memories: capsule.memories.where(memory_type: 'text').order(:created_at).map do |m|
             { id: m.id, content: m.content }
           end,
@@ -20,13 +22,12 @@ module Api
             {
               id: m.id,
               memory_type: m.memory_type,
-              url: m.file.attached? ? m.file.blob.service.url(m.file.key, expires_in: 1.hour, disposition: 'inline', filename: m.file.filename, content_type: m.file.blob.content_type) : nil
+              url: m.file.attached? ? signed_s3_url(m) : nil
             }
           end
         }
       end
 
-      # Narra un texto puntual con la voz del dueño (para cada memoria individual)
       def narrate
         capsule = Capsule.approved.find_by(id: params[:id])
         return render json: { error: 'Cápsula no encontrada' }, status: :not_found unless capsule
@@ -35,16 +36,20 @@ module Api
         text = params[:text].to_s.strip
         return render json: { error: 'No hay contenido para narrar' }, status: :unprocessable_entity if text.blank?
 
+        if text.length > MAX_NARRATE_TEXT_LENGTH
+          return render json: { error: "El texto no puede superar #{MAX_NARRATE_TEXT_LENGTH} caracteres" }, status: :unprocessable_entity
+        end
+
         audio = ElevenLabsService.new.generate_speech(
           voice_id: capsule.user.elevenlabs_voice_id,
           text: text
         )
         send_data audio, type: 'audio/mpeg', disposition: 'inline', filename: 'memoria.mp3'
       rescue => e
-        render json: { error: e.message }, status: :internal_server_error
+        Rails.logger.error "PublicCapsules#narrate error: #{e.class}: #{e.message}"
+        render json: { error: 'Error al generar el audio' }, status: :internal_server_error
       end
 
-      # Genera un relato completo de todas las memorias con GPT y lo narra con la voz del dueño
       def narrate_story
         capsule = Capsule.approved.find_by(id: params[:id])
         return render json: { error: 'Cápsula no encontrada' }, status: :not_found unless capsule
@@ -59,10 +64,26 @@ module Api
           text: story
         )
 
-        response.headers['X-Story-Text'] = story.encode('UTF-8')
+        # No poner contenido personal en headers HTTP (quedan en logs de proxies)
         send_data audio, type: 'audio/mpeg', disposition: 'inline', filename: 'relato.mp3'
       rescue => e
-        render json: { error: e.message }, status: :internal_server_error
+        Rails.logger.error "PublicCapsules#narrate_story error: #{e.class}: #{e.message}"
+        render json: { error: 'Error al generar el relato' }, status: :internal_server_error
+      end
+
+      private
+
+      def signed_s3_url(memory)
+        memory.file.blob.service.url(
+          memory.file.key,
+          expires_in: 10.minutes,
+          disposition: 'inline',
+          filename: memory.file.filename,
+          content_type: memory.file.blob.content_type
+        )
+      rescue => e
+        Rails.logger.error "Error generating S3 URL: #{e.message}"
+        nil
       end
     end
   end

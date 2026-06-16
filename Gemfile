@@ -20,6 +20,7 @@ gem 'spring', '>= 3.1.0' # Asegura una versión compatible de Spring
 gem 'sidekiq'
 gem 'connection_pool', '~> 2.4'
 gem "redis-client", "0.22.2"
+gem 'redis', '>= 4.0.1'
 gem 'rack-session'  # Necesario para manejar sesiones en API-only
 gem "tailwindcss-rails"
 gem 'sprockets-rails'
@@ -44,3 +45,7 @@ gem "importmap-rails", "~> 2.1"
 gem "paper_trail", "~> 12.1"
 gem 'ruby-openai', '~> 7.0'
 gem 'httparty'
+gem 'rack-attack'
+gem 'pundit'
+gem 'rotp'
+gem 'rqrcode'

@@ -20,7 +20,8 @@ class Capsule < ApplicationRecord
     end
   
     def self.search(query)
-      where('title LIKE ? OR description LIKE ?', "%#{query}%", "%#{query}%")
+      sanitized = query.to_s.gsub(/[%_\\]/) { |c| "\\#{c}" }
+      where('title LIKE ? OR description LIKE ?', "%#{sanitized}%", "%#{sanitized}%")
     end
   
     def self.filter_by_date(start_date, end_date)
